@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% include 'posts/includes/switcher.html' %}
+  {% load cache %}
+  {% cache 20 index_page %}
+  <div class="container py-5">
+  <h1>{{ title }}</h1>
+  <br>
+  {% for post in page_obj %}
+    {% include 'posts/includes/article_post.html' %}
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+  {% endcache %}
+</div>
+{% endblock %}
