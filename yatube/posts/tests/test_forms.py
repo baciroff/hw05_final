@@ -10,7 +10,7 @@ class PostFormTests(TestCase):
         self.user = User.objects.create(username="NoName")
         self.guest_client = Client()
         self.authorized_client = Client()
-        self.authorized_client.force_login(self.user)  # type: ignore
+        self.authorized_client.force_login(self.user)
 
     def test_create_post(self):
         """Валидная форма создает запись в Post."""
@@ -43,4 +43,3 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
         self.assertTrue(Post.objects.filter(text="Изменяем текст").exists())
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        

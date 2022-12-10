@@ -34,4 +34,3 @@ class PostModelTest(TestCase):
         for value, expected in values:
             with self.subTest(value=value):
                 self.assertEqual(value, expected)
-                

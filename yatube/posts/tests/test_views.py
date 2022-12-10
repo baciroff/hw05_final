@@ -161,6 +161,7 @@ class PostPagesTests(TestCase):
         r_3 = self.authorized_client.get(reverse("posts:follow_index"))
         self.assertEqual(len(r_3.context["page_obj"]), 0)
 
+
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 

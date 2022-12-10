@@ -69,4 +69,3 @@ class PostURLTests(TestCase):
             with self.subTest(template=template):
                 response = self.authorized_client.get(url)
                 self.assertTemplateUsed(response, template)
-                

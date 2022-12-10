@@ -27,4 +27,3 @@ class PostURLTests(TestCase):
             with self.subTest(template=template):
                 response = self.guest_client.get(url)
                 self.assertTemplateUsed(response, template)
-                
