@@ -10,12 +10,11 @@ class PostFormTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create(username="StasBasov")
-        cls.post = Post.objects.create(author=cls.user, 
+        cls.post = Post.objects.create(author=cls.user,
                                        text="Тестовый пост",)
-        cls.comment = Comment.objects.create(
-            author=cls.user,
-            text="Тестовый комментарий",
-        )
+        cls.comment = Comment.objects.create(author=cls.user,
+                                             text="Тестовый комментарий",)
+
     def setUp(self):
         self.user = User.objects.create(username="NoName")
         self.guest_client = Client()

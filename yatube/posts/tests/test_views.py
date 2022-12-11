@@ -34,6 +34,7 @@ class PostPagesTests(TestCase):
             reverse("posts:profile",
                     kwargs={"username": cls.post.author}): "posts/profile.html"
         }
+        
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
