@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from ..models import Post, Group, User, Comment, Follow
+from ..models import Post, Group, User, Follow
 
 
 class PostPagesTests(TestCase):
@@ -23,6 +23,7 @@ class PostPagesTests(TestCase):
                                        text="Тестовый пост",)
         cls.templates_pages_names = {
             reverse("posts:index"): "posts/index.html",
+            reverse("posts:follow_index"): "posts/follow.html",
             reverse("posts:group_list",
                     kwargs={"slug": cls.group.slug}): "posts/group_list.html",
             reverse("posts:post_detail",
@@ -33,11 +34,6 @@ class PostPagesTests(TestCase):
             reverse("posts:profile",
                     kwargs={"username": cls.post.author}): "posts/profile.html"
         }
-        cls.comment = Comment.objects.create(
-            author=cls.user,
-            text="Тестовый комментарий",
-        )
-
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
@@ -115,21 +111,6 @@ class PostPagesTests(TestCase):
                 response = self.authorized_client.get(value)
                 form_field = response.context["page_obj"]
                 self.assertNotIn(expected, form_field)
-
-    def test_comment_correct_context(self):
-        """Валидная форма Комментария создает запись в Post."""
-        comments_count = Comment.objects.count()
-        form_data = {"text": "Тестовый коммент"}
-        response = self.authorized_client.post(
-            reverse("posts:add_comment", kwargs={"post_id": self.post.id}),
-            data=form_data,
-            # follow=True,
-        )
-        self.assertRedirects(response, reverse("posts:post_detail",
-                             kwargs={"post_id": self.post.id}))
-        self.assertEqual(Comment.objects.count(), comments_count + 1)
-        self.assertTrue(Comment.objects.filter(
-                        text="Тестовый коммент").exists())
 
     def test_check_cache(self):
         """Проверка кеша."""

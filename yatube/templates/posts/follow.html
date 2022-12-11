@@ -2,12 +2,11 @@
 {% load thumbnail %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with follow=True %}
   {% load cache %}
   {% cache 20 index_page %}
   <div class="container py-5">
       <h1>{{ title }}</h1>
-    {# возможно придется убрать тег <h1>  #}
     {% for post in page_obj %}
     {% include 'posts/includes/article_post.html' %}
       {% if post.group %}
@@ -16,7 +15,7 @@
       {% endif %}
       {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
-    {% include 'includes/paginator.html' %}
+    {% include 'posts/includes/paginator.html' %}
   </div>
   {% endcache %}
 {% endblock %}

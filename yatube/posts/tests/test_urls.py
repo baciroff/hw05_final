@@ -29,6 +29,7 @@ class PostURLTests(TestCase):
 
         cls.templates_url_names = {
             "/": "posts/index.html",
+            "/follow/": "posts/follow.html",
             f"/group/{cls.group.slug}/": "posts/group_list.html",
             f"/profile/{cls.user.username}/": "posts/profile.html",
             f"/posts/{cls.post.id}/": "posts/post_detail.html",

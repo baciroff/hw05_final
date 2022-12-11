@@ -2,10 +2,20 @@ from http import HTTPStatus
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Post, Group, User
+from ..models import Post, Group, User, Comment
 
 
 class PostFormTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create(username="StasBasov")
+        cls.post = Post.objects.create(author=cls.user, 
+                                       text="Тестовый пост",)
+        cls.comment = Comment.objects.create(
+            author=cls.user,
+            text="Тестовый комментарий",
+        )
     def setUp(self):
         self.user = User.objects.create(username="NoName")
         self.guest_client = Client()
@@ -43,3 +53,18 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
         self.assertTrue(Post.objects.filter(text="Изменяем текст").exists())
         self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_comment(self):
+        """Валидная форма Комментария создает запись в Post."""
+        comments_count = Comment.objects.count()
+        form_data = {"text": "Тестовый коммент"}
+        response = self.authorized_client.post(
+            reverse("posts:add_comment", kwargs={"post_id": self.post.id}),
+            data=form_data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("posts:post_detail",
+                             kwargs={"post_id": self.post.id}))
+        self.assertEqual(Comment.objects.count(), comments_count + 1)
+        self.assertTrue(Comment.objects.filter(
+                        text=form_data["text"]).exists())

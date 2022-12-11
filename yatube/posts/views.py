@@ -40,7 +40,8 @@ def profile(request, username):
     paginator = Paginator(posts_author, POSTS_ON_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    following = author.following.exists()
+    following = (request.user.is_authenticated
+                 and request.user.follower.filter(author=author).exists())
     context = {
         'title': f'Профайл пользователя { author }',
         'author': author,
@@ -58,7 +59,7 @@ def post_detail(request, post_id):
         'title': f'Пост { post_id }',
         'post': post,
         'post_count': Post.objects.all().count,
-        'form': CommentForm(request.POST or None),
+        'form': CommentForm(),
         'comments': comments,
     }
     return render(request, 'posts/post_detail.html', context)
